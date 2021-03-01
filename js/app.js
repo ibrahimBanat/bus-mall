@@ -132,17 +132,25 @@ const imgGenerate = function () {
   let middleRandIndex;
   let rightRandIndex;
 
-  for (;;) {
-    // this is basiclly another way of creating a while loop
+  do {
+    middleRandIndex = randImagesIndex(0, productArray.length - 1);
+  } while (leftRandIndex === middleRandIndex);
 
-    middleRandIndex = randImagesIndex(0, productArray.length - 1); //getting a random image for the middle section
-    //
-    if (!(middleRandIndex === leftRandIndex)) {
-      //BUG //BUG //BUG
-      // makeing sure that the middle section image differs from the left section image
-      break;
-    }
-  }
+  do {
+    rightRandIndex = randImagesIndex(0, productArray.length - 1);
+  } while (rightRandIndex === middleRandIndex || rightRandIndex === leftRandIndex);
+
+  // for (;;) {
+  //   // this is basiclly another way of creating a while loop
+
+  //   middleRandIndex = randImagesIndex(0, productArray.length - 1); //getting a random image for the middle section
+  //   //
+  //   if (!(middleRandIndex === leftRandIndex)) {
+  //     //BUG //BUG //BUG
+  //     // makeing sure that the middle section image differs from the left section image
+  //     break;
+  //   }
+  // }
 
   // adding the random img path to the middle img element in the html
   middleProductImgae.src = all[middleRandIndex].image;
@@ -154,18 +162,18 @@ const imgGenerate = function () {
   //assigning the img index in a global variable to increase the clicks of the image onClick
   middleClickflag = middleRandIndex;
 
-  for (;;) {
-    // this is basiclly another way of creating a while loop
+  // for (;;) {
+  //   // this is basiclly another way of creating a while loop
 
-    rightRandIndex = randImagesIndex(0, productArray.length - 1); //getting a random image for the right section
+  //   rightRandIndex = randImagesIndex(0, productArray.length - 1); //getting a random image for the right section
 
-    if (
-      !(rightRandIndex === middleRandIndex && rightRandIndex === leftRandIndex)
-    ) {
-      // makeing sure that the middle section image differs from the left section image
-      break;
-    }
-  }
+  //   if (
+  //     !(rightRandIndex === middleRandIndex && rightRandIndex === leftRandIndex)
+  //   ) {
+  //     // makeing sure that the middle section image differs from the left section image
+  //     break;
+  //   }
+  // }
 
   // adding the random img path to the middle img element in the html
   rightProductImgae.src = all[rightRandIndex].image;
