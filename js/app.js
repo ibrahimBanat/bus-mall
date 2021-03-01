@@ -242,3 +242,44 @@ sessionButton.addEventListener('click', function (event) {
     sessionButton.disabled = true;
   }
 });
+
+function renderChart() {
+  let nameArray = [];
+  let clicksArray = [];
+
+  for (let index = 0; index < all.length; index++) {
+    nameArray.push(all[index].name);
+    clicksArray.push(all[index].clicks);
+  }
+
+  //Getting the canvas container
+  const chart = document.getElementById('chart').getContext('2d');
+  new Chart(chart, {
+    type: 'bar',
+    data: {
+      labels: nameArray,
+      datasets: [
+        {
+          label: '# of Votes',
+          data: clicksArray,
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+          borderColor: 'rgba(255, 99, 132, 1)',
+          borderWidth: 3,
+        },
+      ],
+    },
+    options: {
+      scales: {
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true,
+            },
+          },
+        ],
+      },
+    },
+  });
+}
+
+renderChart();
