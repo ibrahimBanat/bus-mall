@@ -84,7 +84,7 @@ const productImageSection = document.getElementById('img-section');
 const leftProductImgae = document.getElementById('img-left');
 const middleProductImgae = document.getElementById('img-middle');
 const rightProductImgae = document.getElementById('img-right');
-
+const results = document.getElementById('results');
 //creating the constructor
 const Prodcut = function (name, ex) {
   this.name = name; //stores the name of the image
@@ -113,15 +113,26 @@ const randImagesIndex = function (min, max) {
   //this method creats a random number inclusive to min/max arguments passed to it
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
+let leftState = randImagesIndex(0, all.length - 1);
+let middleState = randImagesIndex(0, all.length - 1);
+let rightState = randImagesIndex(0, all.length - 1);
 
 const imgGenerate = function () {
   //this function is to render the images and update the global array with how many times each img shown
-  let leftRandIndex = randImagesIndex(0, productArray.length - 1); // picking a random img for the left section
+  let leftRandIndex;
+  do {
+    leftRandIndex = randImagesIndex(0, productArray.length - 1);
+  } while (
+    leftRandIndex === leftState ||
+    leftRandIndex === middleState ||
+    leftRandIndex === rightState
+  );
+  // picking a random img for the left section
 
   // adding the random img path to the left img element in the html
   leftProductImgae.src = all[leftRandIndex].image;
   leftProductImgae.alt = all[leftRandIndex].name;
-
+  console.log('left', all[leftRandIndex].name);
   //updating the number of appearance proparity for the img in the global array
   all[leftRandIndex].timesShown++;
 
@@ -132,52 +143,48 @@ const imgGenerate = function () {
   let middleRandIndex;
   let rightRandIndex;
 
-  for (;;) {
-    // this is basiclly another way of creating a while loop
+  do {
+    middleRandIndex = randImagesIndex(0, productArray.length - 1);
+  } while (
+    leftRandIndex === middleRandIndex ||
+    middleRandIndex === middleState ||
+    middleRandIndex === leftState ||
+    middleRandIndex === rightState
+  );
 
-    middleRandIndex = randImagesIndex(0, productArray.length - 1); //getting a random image for the middle section
-    //
-    if (!(middleRandIndex === leftRandIndex)) {
-      //BUG //BUG //BUG
-      // makeing sure that the middle section image differs from the left section image
-      break;
-    }
-  }
-
+  do {
+    rightRandIndex = randImagesIndex(0, productArray.length - 1);
+  } while (
+    rightRandIndex === middleRandIndex ||
+    rightRandIndex === leftRandIndex ||
+    rightRandIndex === rightState ||
+    rightRandIndex === middleState ||
+    rightRandIndex === leftState
+  );
+  rightState = rightRandIndex;
   // adding the random img path to the middle img element in the html
   middleProductImgae.src = all[middleRandIndex].image;
   middleProductImgae.alt = all[middleRandIndex].name;
-
+  console.log('middle', all[middleRandIndex].name);
   //updating the number of appearance proparity for the img in the global array
   all[middleRandIndex].timesShown++;
 
   //assigning the img index in a global variable to increase the clicks of the image onClick
   middleClickflag = middleRandIndex;
 
-  for (;;) {
-    // this is basiclly another way of creating a while loop
-
-    rightRandIndex = randImagesIndex(0, productArray.length - 1); //getting a random image for the right section
-
-    if (
-      !(rightRandIndex === middleRandIndex && rightRandIndex === leftRandIndex)
-    ) {
-      // makeing sure that the middle section image differs from the left section image
-      break;
-    }
-  }
-
   // adding the random img path to the middle img element in the html
   rightProductImgae.src = all[rightRandIndex].image;
   rightProductImgae.alt = all[rightRandIndex].name;
-
+  console.log('right', all[rightRandIndex].name);
   //updating the number of appearance proparity for the img in the global array
   all[rightRandIndex].timesShown++;
 
   //assigning the img index in a global variable to increase the clicks of the image onClick
   rightClickflag = rightRandIndex;
+  leftState = leftRandIndex;
+  middleState = middleRandIndex;
 };
-imgGenerate(); //involing the function to display a random three images
+// imgGenerate(); //involing the function to display a random three images
 
 function appendData() {
   //this funtion basiclly append the data as un-ordered list
@@ -193,6 +200,7 @@ function appendData() {
 }
 
 function sessionValidated() {
+  imgGenerate();
   //this function just to be invoked in a specific condition
   productImageSection.addEventListener('click', function productImage(event) {
     /*adding event listener to the images, so when the image is clicked a random imgs will be generated
@@ -215,15 +223,18 @@ function sessionValidated() {
           all[rightClickflag].clicks++;
         }
       }
+      console.log(iteration);
       iteration++; //update the iteration to reach the maxIterations
       imgGenerate(); // generate a new imgs after an img was clicked
     }
 
     if (iteration === maxIterations) {
       //this check is for the end of the session
+      productImageSection.removeEventListener('click', productImage);
       alert('End of session, Thank you for your time!');
-      appendData(); //apeending the statistical data just after the user finish the session of voting
-      productImageSection.removeEventListener('click', productImage); // removing the event listner
+      results.style.display = 'inline';
+
+      // removing the event listner
     }
   });
 }
@@ -239,6 +250,49 @@ sessionButton.addEventListener('click', function (event) {
     alert('Please insert from 1 to 25');
   } else {
     sessionValidated();
-    sessionButton.disabled = true;
   }
+});
+
+function renderChart() {
+  let nameArray = [];
+  let clicksArray = [];
+
+  for (let index = 0; index < all.length; index++) {
+    nameArray.push(all[index].name);
+    clicksArray.push(all[index].clicks);
+  }
+
+  //Getting the canvas container
+  const chart = document.getElementById('chart').getContext('2d');
+  new Chart(chart, {
+    type: 'bar',
+    data: {
+      labels: nameArray,
+      datasets: [
+        {
+          label: '# of Votes',
+          data: clicksArray,
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+          borderColor: 'rgba(255, 99, 132, 1)',
+          borderWidth: 3,
+        },
+      ],
+    },
+    options: {
+      scales: {
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true,
+            },
+          },
+        ],
+      },
+    },
+  });
+}
+
+results.addEventListener('click', function () {
+  appendData(); //apeending the statistical data just after the user finish the session of voting
+  renderChart();
 });

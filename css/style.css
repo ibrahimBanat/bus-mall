@@ -1,0 +1,37 @@
+#results {
+  display: none;
+}
+
+main #img-section {
+  display: grid;
+  grid-auto-flow: column;
+  justify-content: space-between;
+}
+main #img-section img {
+  max-width: 290px;
+}
+
+canvas {
+  max-width: 500px;
+  text-align: center;
+  margin: auto;
+}
+.img-section {
+  gap: 20px;
+  width: 50%;
+}
+
+main .result-show {
+  display: grid;
+  grid-auto-flow: row;
+  justify-content: center;
+}
+ul {
+  -webkit-column-count: 4;
+  -moz-column-count: 4;
+  column-count: 4;
+}
+ul li {
+  display: inline-block;
+  padding: 4px;
+}
