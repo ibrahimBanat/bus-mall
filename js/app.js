@@ -92,20 +92,24 @@ const Prodcut = function (name, ex) {
   this.timesShown = 0; // track how many times the image shown
   this.clicks = 0; // track how many time the image got voted
   this.all = all.push(this); // pushing the methods to the global array
+  localStorage.setItem('data', JSON.stringify(all));
 };
+if (JSON.parse(localStorage.getItem('data'))) {
+  all = JSON.parse(localStorage.getItem('data'));
+} else {
+  for (let index = 0; index < productArray.length; index++) {
+    // this loop is to add the right path for each image
 
-for (let index = 0; index < productArray.length; index++) {
-  // this loop is to add the right path for each image
-
-  if (productArray[index].toLocaleLowerCase().includes('.gif')) {
-    // if the image ends with gif, create a new instance with the right path
-    new Prodcut(productArray[index].replace('.gif', ''), 'gif');
-  } else if (productArray[index].toLocaleLowerCase().includes('.png')) {
-    // if the image ends with png, create a new instance with the right path
-    new Prodcut(productArray[index].replace('.png', ''), 'png');
-  } else {
-    // if the image ends with jpg, create a new instance with the right path
-    new Prodcut(productArray[index].replace('.jpg', ''), 'jpg');
+    if (productArray[index].toLocaleLowerCase().includes('.gif')) {
+      // if the image ends with gif, create a new instance with the right path
+      new Prodcut(productArray[index].replace('.gif', ''), 'gif');
+    } else if (productArray[index].toLocaleLowerCase().includes('.png')) {
+      // if the image ends with png, create a new instance with the right path
+      new Prodcut(productArray[index].replace('.png', ''), 'png');
+    } else {
+      // if the image ends with jpg, create a new instance with the right path
+      new Prodcut(productArray[index].replace('.jpg', ''), 'jpg');
+    }
   }
 }
 
@@ -233,7 +237,7 @@ function sessionValidated() {
       productImageSection.removeEventListener('click', productImage);
       alert('End of session, Thank you for your time!');
       results.style.display = 'inline';
-
+      localStorage.setItem('data', JSON.stringify(all));
       // removing the event listner
     }
   });
