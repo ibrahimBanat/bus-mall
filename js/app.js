@@ -260,10 +260,12 @@ sessionButton.addEventListener('click', function (event) {
 function renderChart() {
   let nameArray = [];
   let clicksArray = [];
+  let shownArray = [];
 
   for (let index = 0; index < all.length; index++) {
     nameArray.push(all[index].name);
     clicksArray.push(all[index].clicks);
+    shownArray.push(all[index].timesShown);
   }
 
   //Getting the canvas container
@@ -276,8 +278,15 @@ function renderChart() {
         {
           label: '# of Votes',
           data: clicksArray,
-          backgroundColor: 'rgba(255, 99, 132, 0.2)',
-          borderColor: 'rgba(255, 99, 132, 1)',
+          backgroundColor: 'rgb(255,136,17)',
+          borderColor: 'rgba(57,47,90)',
+          borderWidth: 3,
+        },
+        {
+          label: '# of Times Clicked',
+          data: shownArray,
+          backgroundColor: '#CCBCBC',
+          borderColor: 'rgba(57,47,90)',
           borderWidth: 3,
         },
       ],
